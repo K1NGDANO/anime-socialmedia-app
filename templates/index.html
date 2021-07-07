@@ -1,0 +1,11 @@
+{% load static %}
+<button><a href='/'>Home</a></button>
+<button><a href='/login/'>Log In</a></button>
+<button><a href='/signup/'>Sign Up</a></button>
+<button><a href='/logout/'>Log Out</a></button>
+<button><a href='/create_post/'>Create Post</a></button>
+<button><a href='/profile/{{request.user.id}}/'>View Profile</a></button>
+
+<h1>Main Page</h1>
+
+<h3>{{ request.user }}</h3>

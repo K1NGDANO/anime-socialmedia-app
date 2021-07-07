@@ -1,0 +1,11 @@
+{% load static %}
+
+<button><a href='/signup/'>Sign Up</a></button>
+
+<h1>{{form_title}}</h1>
+
+<form action='' method="POST">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button type='submit'>Submit</button>
+</form>

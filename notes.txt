@@ -1,0 +1,8 @@
+views:
+profile page
+main feed page
+messaging
+
+forms 1 simple 1 model:
+user signup
+user login
