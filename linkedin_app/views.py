@@ -31,7 +31,7 @@ class SignUpView(View):
                     password=data['password'],
                     name=data['name'],
                     bio=data['bio'],
-                    # image=data['image'],
+                    image=data['image'],
                 )
                 if my_user:
                     login(request, my_user)

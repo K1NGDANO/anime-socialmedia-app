@@ -8,7 +8,7 @@ from django.contrib.auth.models import AbstractUser
 class CustomUser(AbstractUser):
     name = models.CharField(max_length=50)
     bio = models.CharField(max_length=150)
-    image = models.ImageField(upload_to='uploads', blank=True, null=True)
+    image = models.ImageField(upload_to='static/uploads/', blank=True, null=True)
     following = models.ManyToManyField('self', blank=True, symmetrical=False)
 
 
