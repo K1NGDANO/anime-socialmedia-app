@@ -27,6 +27,8 @@ urlpatterns = [
     path('logout/', views.logout_view),
     path('create_post/', views.CreatePostView.as_view()),
     path('profile/<int:user_id>/', views.ProfilePageView.as_view()),
+    path('follow/<int:user_id>/', views.add_follow),
+    path('unfollow/<int:user_id>/', views.un_follow),
 ]
 
 if settings.DEBUG:
