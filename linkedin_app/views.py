@@ -80,6 +80,28 @@ class CreatePostView(LoginRequiredMixin, View):
 
 class ProfilePageView(View):
     def get(self, request, user_id):
-        my_user = CustomUser.objects.filter(id=user_id)
-        posts = Post.objects.filter(user_name=request.user)
+        my_user = CustomUser.objects.get(id=user_id)
+        posts = Post.objects.filter(user_name=my_user.id)
         return render(request, 'profile_page.html', {'my_user': my_user, 'posts': posts})
+
+
+@login_required
+def add_follow(request, user_id):
+    follow = CustomUser.objects.get(id=user_id)
+    user = request.user
+    if follow != user:
+        user.following.add(follow)
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+@login_required
+def un_follow(request, user_id):
+    follow = CustomUser.objects.get(id=user_id)
+    user = request.user
+    if follow != user:
+        user.following.remove(follow)
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

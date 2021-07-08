@@ -7,7 +7,14 @@
 <button><a href='/profile/{{request.user.id}}/'>View Profile</a></button>
 
 
-<h1>Welcome {{request.user}}</h1>
+<h1>Welcome {{my_user}}</h1>
+{% if request.user != my_user %}
+        {%if my_user in request.user.following.all%}
+            <button><a href="/unfollow/{{my_user.id}}">UnFollow</a></button>
+        {% elif request.user.is_authenticated %}
+            <button><a href="/follow/{{my_user.id}}">Follow</a></button>
+        {%endif%}
+{% endif %}
 
 <ul>
     {% for post in posts %}
