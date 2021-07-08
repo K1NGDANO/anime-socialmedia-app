@@ -6,7 +6,7 @@ class SignUpForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput)
     name = forms.CharField(max_length=50)
     bio = forms.CharField(max_length=150)
-    # image = forms.ImageField()
+    image = forms.ImageField()
 
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=50)
