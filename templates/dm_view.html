@@ -7,6 +7,6 @@
 <button><a href='/messages/'>Messages</a></button>
 <button><a href='/profile/{{request.user.id}}/'>View Profile</a></button>
 
-<h1>Main Page</h1>
-
-<h3>{{ request.user }}</h3>
+{% for dm in dms %}
+        <a href="/messagefeed/{{dm.id}}">{{dm}}</a>
+    {% endfor %}

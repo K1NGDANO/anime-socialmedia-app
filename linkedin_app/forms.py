@@ -20,3 +20,7 @@ class CreatePost(forms.ModelForm):
             'title',
             'body'
         ]
+
+
+class MessageForm(forms.Form):
+    text= forms.CharField(widget=forms.Textarea, max_length=140)
