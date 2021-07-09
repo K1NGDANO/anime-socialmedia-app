@@ -8,5 +8,5 @@
 <button><a href='/profile/{{request.user.id}}/'>View Profile</a></button>
 
 {% for dm in dms %}
-        <a href="/messagefeed/{{dm.id}}">{{dm}}</a>
+        <h3><a href="/messagefeed/{{dm.id}}">{{dm}}</a></h3>
     {% endfor %}
