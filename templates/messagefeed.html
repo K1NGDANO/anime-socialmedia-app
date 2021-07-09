@@ -7,6 +7,17 @@
 <button><a href='/messages/'>Messages</a></button>
 <button><a href='/profile/{{request.user.id}}/'>View Profile</a></button>
 
-<h1>Main Page</h1>
+{% for dm in dms %}
+        <table>
+            <thead>
+                <th><a href="/profile/{{dm.author.id}}">{{dm.author}}</a></th>
+            </thead>
+            <tbody>
+                <tr><td>{{dm.message.text}}</td></tr>
+                <tr>
+                    <td>{{dm.message.time}}</td>
+                </tr>
 
-<h3>{{ request.user }}</h3>
+            </tbody>
+        </table>
+    {% endfor %}

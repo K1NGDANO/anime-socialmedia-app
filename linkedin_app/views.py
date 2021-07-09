@@ -1,10 +1,10 @@
 from django.shortcuts import render, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from linkedin_app.forms import SignUpForm, LoginForm, CreatePost
+from linkedin_app.forms import SignUpForm, LoginForm, CreatePost, MessageForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
-from linkedin_app.models import CustomUser, Post
+from linkedin_app.models import CustomUser, Post, DirectMessage, Message
 
 # Create your views here.
 @login_required
@@ -105,3 +105,36 @@ def un_follow(request, user_id):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+class DirectMessagePost(LoginRequiredMixin, View):
+    
+    def get(self, request, user_id):
+        form = MessageForm
+        return render(request, 'genform.html', {'form':form})
+    
+    def post(self, request, user_id):
+        target = CustomUser.objects.get(id=user_id)
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            DM = Message.objects.create(text=data['text'])
+            DirectMessage.objects.create(target=target, message=DM, author= request.user)
+            return HttpResponseRedirect('/')
+
+
+def direct_message_view(request):
+    DMS = DirectMessage.objects.filter(target=request.user)
+    authors=[]
+    for dm in DMS:
+        if dm.author not in authors:
+            authors.append(dm.author)
+
+    return render(request, 'dm_view.html', {'dms': authors})
+
+
+def message_feed_view(request, author_id):
+    DMS = DirectMessage.objects.filter(target=request.user).filter(author=author_id)
+    DMS2 = DirectMessage.objects.filter(target=author_id).filter(author=request.user)
+    DMS = DMS.union(DMS2)
+    return render(request, 'messagefeed.html', {'dms': DMS})

@@ -29,6 +29,9 @@ urlpatterns = [
     path('profile/<int:user_id>/', views.ProfilePageView.as_view()),
     path('follow/<int:user_id>/', views.add_follow),
     path('unfollow/<int:user_id>/', views.un_follow),
+    path('messages/', views.direct_message_view),
+    path('messagefeed/<int:author_id>', views.message_feed_view),
+    path('dm/<int:user_id>', views.DirectMessagePost.as_view()),
 ]
 
 if settings.DEBUG:
