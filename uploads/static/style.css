@@ -1,0 +1,16 @@
+.messagefeed{
+    display: flex;
+}
+
+.messages{
+    width: 50%;
+}
+
+.feedform{
+    margin: 0;
+    padding: 15px;
+    width: max-content;
+    height: max-content;
+    position: sticky;
+    top: 10em;
+}

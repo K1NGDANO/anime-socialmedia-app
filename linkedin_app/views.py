@@ -110,7 +110,7 @@ def un_follow(request, user_id):
 class DirectMessagePost(LoginRequiredMixin, View):
     
     def get(self, request, user_id):
-        form = MessageForm
+        form = MessageForm()
         return render(request, 'genform.html', {'form':form})
     
     def post(self, request, user_id):
@@ -137,4 +137,14 @@ def message_feed_view(request, author_id):
     DMS = DirectMessage.objects.filter(target=request.user).filter(author=author_id)
     DMS2 = DirectMessage.objects.filter(target=author_id).filter(author=request.user)
     DMS = DMS.union(DMS2)
-    return render(request, 'messagefeed.html', {'dms': DMS})
+    if request.method == 'POST':
+        target = CustomUser.objects.get(id=author_id)
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            DM = Message.objects.create(text=data['text'])
+            DirectMessage.objects.create(target=target, message=DM, author= request.user)
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+    form = MessageForm()
+    return render(request, 'messagefeed.html', {'dms': DMS, 'form': form})

@@ -1,0 +1,10 @@
+{% if request.user.is_authenticated %}
+    <button><a href='/'>Home</a></button>
+    <button><a href='/logout/'>Log Out</a></button>
+    <button><a href='/create_post/'>Create Post</a></button>
+    <button><a href='/messages/'>Messages</a></button>
+    <button><a href='/profile/{{request.user.id}}/'>View Profile</a></button>
+{% else %}
+    <button><a href='/login/'>Log In</a></button>
+    <button><a href='/signup/'>Sign Up</a></button>
+{% endif %}

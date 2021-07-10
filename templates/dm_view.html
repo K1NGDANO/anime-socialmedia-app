@@ -1,11 +1,5 @@
 {% load static %}
-<button><a href='/'>Home</a></button>
-<button><a href='/login/'>Log In</a></button>
-<button><a href='/signup/'>Sign Up</a></button>
-<button><a href='/logout/'>Log Out</a></button>
-<button><a href='/create_post/'>Create Post</a></button>
-<button><a href='/messages/'>Messages</a></button>
-<button><a href='/profile/{{request.user.id}}/'>View Profile</a></button>
+{% include 'nav.html' %}
 
 {% for dm in dms %}
         <h3><a href="/messagefeed/{{dm.id}}">{{dm}}</a></h3>
