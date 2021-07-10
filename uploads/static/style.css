@@ -36,3 +36,11 @@
     width: 10em;
     margin: 1em 0;
 }
+
+thead{
+    display: flex;
+}
+
+.avatar{
+    height: 2em;
+}

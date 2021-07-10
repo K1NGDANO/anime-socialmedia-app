@@ -9,7 +9,17 @@ from linkedin_app.models import CustomUser, Post, DirectMessage, Message
 # Create your views here.
 @login_required
 def index(request):
-    return render(request, 'index.html')
+    posts = Post.objects.all()
+    return render(request, 'index.html', {'posts':posts})
+
+
+@login_required
+def follow_view(request):
+    followers = request.user.following.all()
+    posts = Post.objects.filter(user_name__in=followers)
+    my_posts = Post.objects.filter(user_name=request.user)
+    posts = posts.union(my_posts)
+    return render(request, 'index.html', {'posts':posts})
 
 
 

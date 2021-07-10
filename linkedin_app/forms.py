@@ -23,4 +23,4 @@ class CreatePost(forms.ModelForm):
 
 
 class MessageForm(forms.Form):
-    text= forms.CharField(max_length=140)
+    text= forms.CharField(widget=forms.TextInput(attrs={'autocomplete':'off'}),max_length=140)
