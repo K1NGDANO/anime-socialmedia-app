@@ -6,20 +6,22 @@
 
 <div class="messagefeed">
     <div class="messages">
-        {% for dm in dms %}
-                <table>
-                    <thead>
-                        <th><a href="/profile/{{dm.author.id}}">{{dm.author}}</a></th>
-                    </thead>
-                    <tbody>
-                        <tr><td>{{dm.message.text}}</td></tr>
-                        <tr>
-                            <td>{{dm.message.time}}</td>
-                        </tr>
-        
-                    </tbody>
-                </table>
-            {% endfor %}
+        <div class="div">
+            {% for dm in dms %}
+                    <table>
+                        <thead>
+                            <th><a href="/profile/{{dm.author.id}}">{{dm.author}}</a></th>
+                        </thead>
+                        <tbody>
+                            <tr><td>{{dm.message.text}}</td></tr>
+                            <tr>
+                                <td>{{dm.message.time}}</td>
+                            </tr>
+            
+                        </tbody>
+                    </table>
+                {% endfor %}
+        </div>
     </div>
     <div class="feedform">
         {% include 'genform.html' %}

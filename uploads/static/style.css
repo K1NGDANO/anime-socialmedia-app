@@ -1,16 +1,38 @@
 .messagefeed{
     display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .messages{
+    margin-top: 2em;
     width: 50%;
+    height: 20em;
+    overflow: auto;
+    display: flex;
+    flex-direction: column-reverse;
+    border: 1px solid grey;
 }
 
-.feedform{
-    margin: 0;
-    padding: 15px;
-    width: max-content;
-    height: max-content;
-    position: sticky;
-    top: 10em;
+
+.feedform form{
+    display: flex;
+    width: 100%;
+    margin: 0%;
+}
+
+.feedform form input{ 
+    width: 40em;
+    padding: 1em;
+    line-height: 28px;
+}
+
+.feedform form p label{ 
+    font-size: 0;
+}
+
+.feedform form button{ 
+    width: 10em;
+    margin: 1em 0;
 }
