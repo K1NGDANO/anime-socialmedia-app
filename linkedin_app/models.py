@@ -17,6 +17,7 @@ class CustomUser(AbstractUser):
 class Post(models.Model):
     user_name = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="user_name")
     title = models.CharField(max_length=50)
+    image = models.ImageField(upload_to='static/uploads/', blank=True, null=True)
     body = models.CharField(max_length=200)
 
 

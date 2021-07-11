@@ -6,23 +6,42 @@
 
 <h1>Main Page</h1>
 
-<h3>{{ request.user }}</h3>
-<a href="/following/">People you Follow</a>
-{% for post in posts %}
-    <table>
-        <thead>
-            <th>
-                <a href="/profile/{{post.user_name.id}}">
-                    {% if post.user_name.image %}
-                        <img class='avatar' src='{{post.user_name.image.url}}' alt="avatar">
-                    {% endif %}
-                    {{post.user_name}}
-                </a>
-            </th>
-        </thead>
-        <tbody>
-            <tr><td>{{post.title}}</td></tr>
-            <tr><td>{{post.body}}</td></tr>
-        </tbody>
-    </table>
-{% endfor %}
+<div class="mainpage">
+    <div class="user">
+        {% if request.user.image %}
+            <img class="profilepic" src="{{request.user.image.url}}" alt="profilepic">
+        {% endif %}
+        <h3>{{ request.user }}</h3>
+    </div>
+    <div class="posts">
+        <a href="/">All Posts</a>
+        <a href="/following/">People you Follow</a>
+        <div class="postfeed">
+            {% for post in posts %}
+                <table>
+                    <thead>
+                        <th>
+                            <a href="/profile/{{post.user_name.id}}">
+                                {% if post.user_name.image %}
+                                    <img class='avatar' src='{{post.user_name.image.url}}' alt="avatar">
+                                {% endif %}
+                                {{post.user_name}}
+                            </a>
+                        </th>
+                    </thead>
+                    <tbody>
+                        <tr><td>{{post.title}}</td></tr>
+                        <tr>
+                            <td>
+                                {% if post.image %}
+                                    <img class="postimg" src="{{post.image.url}}" alt="{{post.title}}">
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr><td>{{post.body}}</td></tr>
+                    </tbody>
+                </table>
+            {% endfor %}
+        </div>
+    </div>
+</div>

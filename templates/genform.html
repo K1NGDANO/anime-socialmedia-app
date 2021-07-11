@@ -1,4 +1,4 @@
-{% if not dms %}
+{% if not dms.count >= 0 %}
     {% include 'nav.html' %}
 {% endif %}
 <h1>{{form_title}}</h1>

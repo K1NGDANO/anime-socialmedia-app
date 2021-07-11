@@ -18,7 +18,8 @@ class CreatePost(forms.ModelForm):
         model = Post
         fields = [
             'title',
-            'body'
+            'body',
+            'image'
         ]
 
 

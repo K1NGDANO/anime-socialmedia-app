@@ -4,7 +4,7 @@
 
 <h1>Welcome {{my_user}}</h1>
 {% if request.user != my_user %}
-    <button><a href="/dm/{{my_user.id}}">Message Me</a></button>
+    <button><a href="/messagefeed/{{my_user.id}}">Message Me</a></button>
     {%if my_user in request.user.following.all%}
     <a href="/unfollow/{{my_user.id}}"><button>UnFollow &#128148</button></a>
     {% elif request.user.is_authenticated %}

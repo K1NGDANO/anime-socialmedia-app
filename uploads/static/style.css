@@ -44,3 +44,27 @@ thead{
 .avatar{
     height: 2em;
 }
+
+.mainpage{
+    display: flex;
+}
+
+.profilepic{
+    width: 100%;
+}
+
+.user{
+    width: 25%;
+    margin: 2em;
+}
+
+.postfeed{
+    overflow: auto;
+    height: 35em;
+    max-width: 50%;
+    padding: 1em;
+}
+
+.postimg{
+    max-width: 100%;
+}

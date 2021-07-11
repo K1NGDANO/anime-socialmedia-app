@@ -1,6 +1,9 @@
 {% load static %}
 {% include 'nav.html' %}
 
+<h2>Your Conversations:</h2>
 {% for dm in dms %}
-        <h3><a href="/messagefeed/{{dm.id}}">{{dm}}</a></h3>
-    {% endfor %}
+    <h3><a href="/messagefeed/{{dm.id}}">{{dm}}</a></h3>
+{% empty %}
+    <h3>No Conversations</h3>
+{% endfor %}
