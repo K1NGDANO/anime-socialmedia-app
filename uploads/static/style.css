@@ -58,10 +58,14 @@ thead{
     margin: 2em;
 }
 
+.posts{
+    width: 75%;
+}
+
 .postfeed{
     overflow: auto;
     height: 35em;
-    max-width: 50%;
+    width: 50%;
     padding: 1em;
 }
 

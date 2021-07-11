@@ -24,6 +24,7 @@ class Post(models.Model):
 class Message(models.Model):
     text = models.CharField(max_length=140)
     time = models.DateTimeField(default=timezone.now)
+    seen = models.BooleanField(default=False)
 
 
 class DirectMessage(models.Model):

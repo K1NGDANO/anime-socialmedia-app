@@ -10,7 +10,12 @@ from linkedin_app.models import CustomUser, Post, DirectMessage, Message
 @login_required
 def index(request):
     posts = Post.objects.all()
-    return render(request, 'index.html', {'posts':posts.order_by('-id')})
+    new_messages = ''
+    messages = DirectMessage.objects.filter(target=request.user.id)
+    for dm in messages:
+        if not dm.message.seen:
+            new_messages= 'You have unread messages!'
+    return render(request, 'index.html', {'posts':posts.order_by('-id'), 'messages':new_messages})
 
 
 @login_required
@@ -139,6 +144,9 @@ def message_feed_view(request, author_id):
         return HttpResponseRedirect('/')
     target = CustomUser.objects.get(id=author_id)
     DMS = DirectMessage.objects.filter(target=request.user).filter(author=author_id)
+    for dm in DMS:
+        dm.message.seen = True
+        dm.message.save()
     DMS2 = DirectMessage.objects.filter(target=author_id).filter(author=request.user)
     DMS = DMS.union(DMS2)
     if request.method == 'POST':
