@@ -130,18 +130,42 @@ def un_follow(request, user_id):
 
 
 def direct_message_view(request):
+    '''
+    grabs all direct messages written by and targeting the current user
+    loops through them and checks if the message is in the feed list already
+    if feed is empty appends the most recent message and moves onto the next dm
+    if feed is not empty it loops through feed and if any of feed items have a
+    user equal to the current dm author or target(loop ran based on if author is user or not)
+    if that is true it marks in_feed as true meaning the message will not be added to
+    the feed
+    '''
     DMS = DirectMessage.objects.filter(target=request.user)
     DMS = DMS.union(DirectMessage.objects.filter(author=request.user)).order_by('-id')
-    authors=[]
+    feed=[]
     for dm in DMS:
+        in_feed = False
         if dm.author == request.user:
-            if dm.target not in authors:
-                authors.append(dm.target)
+            if len(feed) == 0:
+                feed.append({'user':dm.target, 'message': dm.message})
+                continue
+            else:
+                for item in feed:
+                    if item['user'] == dm.target:
+                        in_feed = True
+            if not in_feed:
+                feed.append({'user':dm.target, 'message': dm.message})
         else:
-            if dm.author not in authors:
-                authors.append(dm.author)
+            if len(feed) == 0:
+                feed.append({'user':dm.author, 'message': dm.message})
+                continue
+            else:
+                for item in feed:
+                    if item['user'] == dm.author:
+                        in_feed = True
+            if not in_feed:
+                feed.append({'user':dm.author, 'message': dm.message})
 
-    return render(request, 'dm_view.html', {'dms': authors})
+    return render(request, 'dm_view.html', {'dms': feed})
 
 
 def message_feed_view(request, author_id):

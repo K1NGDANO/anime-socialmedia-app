@@ -1,9 +1,27 @@
 {% load static %}
+<head>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
 {% include 'nav.html' %}
 
 <h2>Your Conversations:</h2>
-{% for dm in dms %}
-    <h3><a href="/messagefeed/{{dm.id}}">{{dm}}</a></h3>
-{% empty %}
+<table class="dmfeed">
+    <tr>
+        <th>User:</th>
+        <th>Last Message:</th>
+        <th>Time Sent:</th>
+    </tr>
+    {% for dm in dms %}
+    <tr>
+        {% if dm.message.directmessage_set.first.author != request.user and not dm.message.seen %}
+            <td><a class="newmessage" href="/messagefeed/{{dm.user.id}}">{{dm.user|title}}</a></td>
+        {% else %}
+            <td><a href="/messagefeed/{{dm.user.id}}">{{dm.user|title}}</a></td>
+        {% endif %}
+        <td>{{dm.message.directmessage_set.first.author|title}}: {{dm.message.text}}</td>
+        <td>{{dm.message.time}}</td>
+    </tr>
+    {% empty %}
     <h3>No Conversations</h3>
-{% endfor %}
+    {% endfor %}
+</table>

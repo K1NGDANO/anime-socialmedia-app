@@ -65,10 +65,36 @@ thead{
 .postfeed{
     overflow: auto;
     height: 35em;
-    width: 50%;
+    width: 60%;
     padding: 1em;
+}
+.postfeed table{
+    width: 100%;
 }
 
 .postimg{
-    max-width: 100%;
+    width: 100%;
+}
+
+.dmfeed{
+    border: 1px solid black;
+    width: 50%;
+    border-collapse: collapse;
+}
+
+th{
+    text-align: left;
+}
+
+.dmfeed tr{
+    border-top: 1px solid black;
+}
+.dmfeed td{
+    border-left: 1px solid black;
+}
+
+.newmessage{
+    font-size: larger;
+    font-weight: bold;
+    color: green;
 }
