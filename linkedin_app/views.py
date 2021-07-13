@@ -10,26 +10,16 @@ from linkedin_app.models import CustomUser, Post, DirectMessage, Message
 @login_required
 def index(request):
     posts = Post.objects.all()
-    new_messages = ''
-    messages = DirectMessage.objects.filter(target=request.user.id)
-    for dm in messages:
-        if not dm.message.seen:
-            new_messages= 'You have unread messages!'
-    return render(request, 'index.html', {'posts':posts.order_by('-id'), 'messages':new_messages})
+    return render(request, 'index.html', {'posts':posts.order_by('-id')})
 
 
 @login_required
 def follow_view(request):
-    new_messages = ''
-    messages = DirectMessage.objects.filter(target=request.user.id)
-    for dm in messages:
-        if not dm.message.seen:
-            new_messages= 'You have unread messages!'
     followers = request.user.following.all()
     posts = Post.objects.filter(user_name__in=followers)
     my_posts = Post.objects.filter(user_name=request.user)
     posts = posts.union(my_posts)
-    return render(request, 'index.html', {'posts':posts.order_by('-id'), 'messages':new_messages})
+    return render(request, 'index.html', {'posts':posts.order_by('-id')})
 
 
 

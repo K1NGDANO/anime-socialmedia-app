@@ -12,6 +12,14 @@ class CustomUser(AbstractUser):
     image = models.ImageField(upload_to='static/uploads/', blank=True, null=True)
     following = models.ManyToManyField('self', blank=True, symmetrical=False)
 
+    def check_messages(self):
+        new_messages = ''
+        messages = DirectMessage.objects.filter(target=self.id)
+        for dm in messages:
+            if not dm.message.seen:
+                new_messages= 'You have unread messages!'
+        return new_messages
+
 
 
 class Post(models.Model):
