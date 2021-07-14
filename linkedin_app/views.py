@@ -1,4 +1,5 @@
-from django.shortcuts import render, HttpResponseRedirect
+from django.shortcuts import render, HttpResponseRedirect, HttpResponse
+from django.http import Http404, HttpResponseServerError
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from linkedin_app.forms import SignUpForm, LoginForm, CreatePost, MessageForm
@@ -91,31 +92,23 @@ class CreatePostView(LoginRequiredMixin, View):
 
 class ProfilePageView(View):
     def get(self, request, user_id):
-        my_user = CustomUser.objects.get(id=user_id)
+        try:
+            my_user = CustomUser.objects.get(id=user_id)
+        except CustomUser.DoesNotExist:
+            raise Http404("User does not exist")
         posts = Post.objects.filter(user_name=my_user.id)
         return render(request, 'profile_page.html', {'my_user': my_user, 'posts': posts})
 
 
 @login_required
-def add_follow(request, user_id):
+def handle_follow(request, user_id):
     follow = CustomUser.objects.get(id=user_id)
     user = request.user
-    if follow != user:
+    if follow != user and follow not in user.following.all():
         user.following.add(follow)
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-
-@login_required
-def un_follow(request, user_id):
-    follow = CustomUser.objects.get(id=user_id)
-    user = request.user
-    if follow != user:
         user.following.remove(follow)
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    else:
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 
@@ -135,20 +128,14 @@ def direct_message_view(request):
     for dm in DMS:
         in_feed = False
         if dm.author == request.user:
-            if len(feed) == 0:
-                feed.append({'user':dm.target, 'message': dm.message})
-                continue
-            else:
+            if len(feed) > 0:
                 for item in feed:
                     if item['user'] == dm.target:
                         in_feed = True
             if not in_feed:
                 feed.append({'user':dm.target, 'message': dm.message})
         else:
-            if len(feed) == 0:
-                feed.append({'user':dm.author, 'message': dm.message})
-                continue
-            else:
+            if len(feed) > 0:
                 for item in feed:
                     if item['user'] == dm.author:
                         in_feed = True
@@ -188,9 +175,16 @@ def handle_like(request, post_id):
         user.liked_posts.add(like)
         like.likes += 1
         like.save()
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
         user.liked_posts.remove(like)
         like.likes -= 1
         like.save()
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def my_404(request, exception):
+    return render(request, 'not_found.html', {'exception': exception})
+
+
+def my_500(request):
+    return render(request, '500.html')

@@ -19,6 +19,9 @@ from linkedin_app import views
 from django.conf import settings
 from django.conf.urls.static import static
 
+handler404 = 'linkedin_app.views.my_404'
+handler500 = 'linkedin_app.views.my_500'
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index),
@@ -28,8 +31,7 @@ urlpatterns = [
     path('logout/', views.logout_view),
     path('create_post/', views.CreatePostView.as_view()),
     path('profile/<int:user_id>/', views.ProfilePageView.as_view()),
-    path('follow/<int:user_id>/', views.add_follow),
-    path('unfollow/<int:user_id>/', views.un_follow),
+    path('follow/<int:user_id>/', views.handle_follow),
     path('like/<int:post_id>/', views.handle_like),
     path('messages/', views.direct_message_view),
     path('messagefeed/<int:author_id>', views.message_feed_view),
