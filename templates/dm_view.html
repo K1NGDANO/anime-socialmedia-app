@@ -1,12 +1,27 @@
 {% load static %}
-<button><a href='/'>Home</a></button>
-<button><a href='/login/'>Log In</a></button>
-<button><a href='/signup/'>Sign Up</a></button>
-<button><a href='/logout/'>Log Out</a></button>
-<button><a href='/create_post/'>Create Post</a></button>
-<button><a href='/messages/'>Messages</a></button>
-<button><a href='/profile/{{request.user.id}}/'>View Profile</a></button>
+<head>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+{% include 'nav.html' %}
 
-{% for dm in dms %}
-        <h3><a href="/messagefeed/{{dm.id}}">{{dm}}</a></h3>
+<h2>Your Conversations:</h2>
+<table class="dmfeed">
+    <tr>
+        <th>User:</th>
+        <th>Last Message:</th>
+        <th>Time Sent:</th>
+    </tr>
+    {% for dm in dms %}
+    <tr>
+        {% if dm.message.directmessage_set.first.author != request.user and not dm.message.seen %}
+            <td><a class="newmessage" href="/messagefeed/{{dm.user.id}}">{{dm.user|title}}</a></td>
+        {% else %}
+            <td><a href="/messagefeed/{{dm.user.id}}">{{dm.user|title}}</a></td>
+        {% endif %}
+        <td>{{dm.message.directmessage_set.first.author|title}}: {{dm.message.text}}</td>
+        <td>{{dm.message.time}}</td>
+    </tr>
+    {% empty %}
+    <h3>No Conversations</h3>
     {% endfor %}
+</table>

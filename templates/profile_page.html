@@ -1,20 +1,14 @@
 {% load static %}
-<button><a href='/'>Home</a></button>
-<button><a href='/login/'>Log In</a></button>
-<button><a href='/signup/'>Sign Up</a></button>
-<button><a href='/logout/'>Log Out</a></button>
-<button><a href='/create_post/'>Create Post</a></button>
-<button><a href='/messages/'>Messages</a></button>
-<button><a href='/profile/{{request.user.id}}/'>View Profile</a></button>
+{% include 'nav.html' %}
 
 
 <h1>Welcome {{my_user}}</h1>
 {% if request.user != my_user %}
-    <button><a href="/dm/{{my_user.id}}">Message Me</a></button>
+    <button><a href="/messagefeed/{{my_user.id}}">Message Me</a></button>
     {%if my_user in request.user.following.all%}
-        <button><a href="/unfollow/{{my_user.id}}">UnFollow &#128148</a></button>
+    <a href="/unfollow/{{my_user.id}}"><button>UnFollow &#128148</button></a>
     {% elif request.user.is_authenticated %}
-        <button><a href="/follow/{{my_user.id}}">Follow &#128151</a></button>
+    <a href="/follow/{{my_user.id}}"><button>Follow &#128151</button></a>
     {%endif%}
 {% endif %}
 

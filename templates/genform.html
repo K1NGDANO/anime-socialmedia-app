@@ -1,7 +1,6 @@
-{% load static %}
-
-<button><a href='/signup/'>Sign Up</a></button>
-
+{% if not dms.count >= 0 %}
+    {% include 'nav.html' %}
+{% endif %}
 <h1>{{form_title}}</h1>
 
 <form action='' method="POST" enctype="multipart/form-data">

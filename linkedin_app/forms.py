@@ -18,9 +18,10 @@ class CreatePost(forms.ModelForm):
         model = Post
         fields = [
             'title',
-            'body'
+            'body',
+            'image'
         ]
 
 
 class MessageForm(forms.Form):
-    text= forms.CharField(widget=forms.Textarea, max_length=140)
+    text= forms.CharField(widget=forms.TextInput(attrs={'autocomplete':'off'}),max_length=140)
