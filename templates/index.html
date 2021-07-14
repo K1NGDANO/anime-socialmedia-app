@@ -24,12 +24,12 @@
                                 {% if post.user_name.image %}
                                     <img class='avatar' src='{{post.user_name.image.url}}' alt="avatar">
                                 {% endif %}
-                                {{post.user_name}}
+                                {{post.user_name|title}}
                             </a>
+                            :{{post.title}}
                         </th>
                     </thead>
                     <tbody>
-                        <tr><td>{{post.title}}</td></tr>
                         <tr>
                             <td>
                                 {% if post.image %}
