@@ -11,6 +11,7 @@ class CustomUser(AbstractUser):
     bio = models.CharField(max_length=150)
     image = models.ImageField(upload_to='static/uploads/', blank=True, null=True)
     following = models.ManyToManyField('self', blank=True, symmetrical=False)
+    liked_posts = models.ManyToManyField('Post', blank=True, symmetrical=False)
 
     def check_messages(self):
         new_messages = ''
@@ -27,6 +28,7 @@ class Post(models.Model):
     title = models.CharField(max_length=50)
     image = models.ImageField(upload_to='static/uploads/', blank=True, null=True)
     body = models.CharField(max_length=200)
+    likes = models.IntegerField(default=0)
 
 
 class Message(models.Model):

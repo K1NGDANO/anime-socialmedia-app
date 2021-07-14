@@ -178,3 +178,19 @@ def message_feed_view(request, author_id):
 
     form = MessageForm()
     return render(request, 'messagefeed.html', {'dms': DMS, 'form': form, 'target': target})
+
+
+@login_required
+def handle_like(request, post_id):
+    like = Post.objects.get(id=post_id)
+    user = request.user
+    if like not in user.liked_posts.all():
+        user.liked_posts.add(like)
+        like.likes += 1
+        like.save()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        user.liked_posts.remove(like)
+        like.likes -= 1
+        like.save()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

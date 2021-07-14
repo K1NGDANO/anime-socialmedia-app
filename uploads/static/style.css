@@ -63,8 +63,8 @@ thead{
 }
 
 .postfeed{
-    overflow: auto;
-    height: 35em;
+    /* overflow: auto;
+    height: 35em; */
     width: 60%;
     padding: 1em;
 }

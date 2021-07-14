@@ -38,7 +38,17 @@
                             </td>
                         </tr>
                         <tr><td>{{post.body}}</td></tr>
-                        <tr><td><button>Like</button></td></tr>
+                        <tr>
+                            <td>
+                                Likes:{{post.likes}} <a href="/like/{{post.id}}">
+                                    {% if post in request.user.liked_posts.all %}
+                                        <button>UnLike</button>
+                                    {% else %}
+                                        <button>Like</button>
+                                    {% endif %}
+                                </a>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             {% endfor %}
