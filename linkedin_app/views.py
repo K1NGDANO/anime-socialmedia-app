@@ -1,5 +1,6 @@
-from django.shortcuts import render, HttpResponseRedirect, HttpResponse
-from django.http import Http404, HttpResponseServerError
+from linkedinClone.settings import MEDIA_ROOT
+from django.shortcuts import render, HttpResponseRedirect
+from django.http import Http404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from linkedin_app.forms import SignUpForm, LoginForm, CreatePost, MessageForm
