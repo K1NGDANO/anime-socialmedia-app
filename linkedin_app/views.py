@@ -37,20 +37,21 @@ class SignUpView(View):
     def post(self, request):
         if request.method == 'POST':
             form = SignUpForm(request.POST, request.FILES)
-            print('Form was posted')
             if form.is_valid():
-                print('Form is valid')
                 data = form.cleaned_data
-                my_user = CustomUser.objects.create_user(
-                    username=data['username'],
-                    password=data['password'],
-                    name=data['name'],
-                    bio=data['bio'],
-                    image=data['image'],
-                )
+                try:
+                    my_user = CustomUser.objects.create_user(
+                        username=data['username'],
+                        password=data['password'],
+                        name=data['name'],
+                        bio=data['bio'],
+                        image=data['image'],
+                    )
+                except:
+                    raise SuspiciousOperation("User with that name already")
                 if my_user:
                     login(request, my_user)
-                    return HttpResponseRedirect('/')
+                    return HttpResponseRedirect('/') 
 
 
 def login_view(request):
@@ -63,6 +64,8 @@ def login_view(request):
             if my_user:
                 login(request, my_user)
                 return HttpResponseRedirect('/')
+            else:
+                raise SuspiciousOperation("Username or Password is incorrect")
 
     form_title = 'Log In'
     form = LoginForm()
@@ -192,7 +195,7 @@ def my_400(request, exception):
 
 
 def my_404(request, exception):
-    return render(request, '404.html', {'exception': exception})
+    return render(request, '404.html', {'message': exception})
 
 
 def my_500(request):
