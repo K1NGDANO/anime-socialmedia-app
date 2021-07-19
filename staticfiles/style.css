@@ -1,0 +1,100 @@
+.messagefeed{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.messages{
+    margin-top: 2em;
+    width: 50%;
+    height: 20em;
+    overflow: auto;
+    display: flex;
+    flex-direction: column-reverse;
+    border: 1px solid grey;
+}
+
+
+.feedform form{
+    display: flex;
+    width: 100%;
+    margin: 0%;
+}
+
+.feedform form input{ 
+    width: 40em;
+    padding: 1em;
+    line-height: 28px;
+}
+
+.feedform form p label{ 
+    font-size: 0;
+}
+
+.feedform form button{ 
+    width: 10em;
+    margin: 1em 0;
+}
+
+thead{
+    display: flex;
+}
+
+.avatar{
+    height: 2em;
+}
+
+.mainpage{
+    display: flex;
+}
+
+.profilepic{
+    width: 100%;
+}
+
+.user{
+    width: 25%;
+    margin: 2em;
+}
+
+.posts{
+    width: 75%;
+}
+
+.postfeed{
+    /* overflow: auto;
+    height: 35em; */
+    width: 60%;
+    padding: 1em;
+}
+.postfeed table{
+    width: 100%;
+}
+
+.postimg{
+    width: 100%;
+}
+
+.dmfeed{
+    border: 1px solid black;
+    width: 50%;
+    border-collapse: collapse;
+}
+
+th{
+    text-align: left;
+}
+
+.dmfeed tr{
+    border-top: 1px solid black;
+}
+.dmfeed td{
+    border-left: 1px solid black;
+}
+
+.newmessage{
+    font-size: larger;
+    font-weight: bold;
+    color: green;
+}

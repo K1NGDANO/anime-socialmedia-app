@@ -1,11 +1,15 @@
-from django.shortcuts import render, HttpResponseRedirect, HttpResponse
-from django.http import Http404, HttpResponseServerError
+from django.shortcuts import render, HttpResponseRedirect
+from django.http import Http404
+from django.core.exceptions import SuspiciousOperation
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from linkedin_app.forms import SignUpForm, LoginForm, CreatePost, MessageForm
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views import View
+
+from linkedin_app.forms import SignUpForm, LoginForm, CreatePost, MessageForm
 from linkedin_app.models import CustomUser, Post, DirectMessage, Message
+
+from django.views import View
 
 # Create your views here.
 @login_required
@@ -111,7 +115,7 @@ def handle_follow(request, user_id):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-
+@login_required
 def direct_message_view(request):
     '''
     grabs all direct messages written by and targeting the current user
@@ -145,9 +149,10 @@ def direct_message_view(request):
     return render(request, 'dm_view.html', {'dms': feed})
 
 
+@login_required
 def message_feed_view(request, author_id):
     if request.user.id == author_id:
-        return HttpResponseRedirect('/')
+        raise SuspiciousOperation("You can't talk to yourself")
     target = CustomUser.objects.get(id=author_id)
     DMS = DirectMessage.objects.filter(target=request.user).filter(author=author_id)
     for dm in DMS:
@@ -182,8 +187,12 @@ def handle_like(request, post_id):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
+def my_400(request, exception):
+    return render(request, '400.html', {'exception': exception})
+
+
 def my_404(request, exception):
-    return render(request, 'not_found.html', {'exception': exception})
+    return render(request, '404.html', {'exception': exception})
 
 
 def my_500(request):
