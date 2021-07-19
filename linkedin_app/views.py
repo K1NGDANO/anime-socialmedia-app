@@ -1,15 +1,30 @@
 from django.shortcuts import render, HttpResponseRedirect
+from django.http import Http404
+from django.core.exceptions import SuspiciousOperation
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from linkedin_app.forms import SignUpForm, LoginForm, CreatePost
 from django.contrib.auth.mixins import LoginRequiredMixin
+
+from linkedin_app.forms import SignUpForm, LoginForm, CreatePost, MessageForm
+from linkedin_app.models import CustomUser, Post, DirectMessage, Message
+
 from django.views import View
-from linkedin_app.models import CustomUser, Post
 
 # Create your views here.
 @login_required
 def index(request):
-    return render(request, 'index.html')
+    posts = Post.objects.all()
+    return render(request, 'index.html', {'posts':posts.order_by('-id')})
+
+
+@login_required
+def follow_view(request):
+    followers = request.user.following.all()
+    posts = Post.objects.filter(user_name__in=followers)
+    my_posts = Post.objects.filter(user_name=request.user)
+    posts = posts.union(my_posts)
+    return render(request, 'index.html', {'posts':posts.order_by('-id')})
 
 
 
@@ -22,20 +37,21 @@ class SignUpView(View):
     def post(self, request):
         if request.method == 'POST':
             form = SignUpForm(request.POST, request.FILES)
-            print('Form was posted')
             if form.is_valid():
-                print('Form is valid')
                 data = form.cleaned_data
-                my_user = CustomUser.objects.create_user(
-                    username=data['username'],
-                    password=data['password'],
-                    name=data['name'],
-                    bio=data['bio'],
-                    image=data['image'],
-                )
+                try:
+                    my_user = CustomUser.objects.create_user(
+                        username=data['username'],
+                        password=data['password'],
+                        name=data['name'],
+                        bio=data['bio'],
+                        image=data['image'],
+                    )
+                except:
+                    raise SuspiciousOperation("User with that name already")
                 if my_user:
                     login(request, my_user)
-                    return HttpResponseRedirect('/')
+                    return HttpResponseRedirect('/') 
 
 
 def login_view(request):
@@ -48,6 +64,8 @@ def login_view(request):
             if my_user:
                 login(request, my_user)
                 return HttpResponseRedirect('/')
+            else:
+                raise SuspiciousOperation("Username or Password is incorrect")
 
     form_title = 'Log In'
     form = LoginForm()
@@ -66,13 +84,14 @@ class CreatePostView(LoginRequiredMixin, View):
         
     def post(self, request):
         if request.method == 'POST':
-            form = CreatePost(request.POST)
+            form = CreatePost(request.POST, request.FILES)
             if form.is_valid():
                 data = form.cleaned_data
                 Post.objects.create(
                     user_name=request.user,
                     title=data['title'],
-                    body=data['body']
+                    body=data['body'],
+                    image = data['image']
                 )
                 return HttpResponseRedirect('/')
 
@@ -80,6 +99,104 @@ class CreatePostView(LoginRequiredMixin, View):
 
 class ProfilePageView(View):
     def get(self, request, user_id):
-        my_user = CustomUser.objects.filter(id=user_id)
-        posts = Post.objects.filter(user_name=request.user)
+        try:
+            my_user = CustomUser.objects.get(id=user_id)
+        except CustomUser.DoesNotExist:
+            raise Http404("User does not exist")
+        posts = Post.objects.filter(user_name=my_user.id)
         return render(request, 'profile_page.html', {'my_user': my_user, 'posts': posts})
+
+
+@login_required
+def handle_follow(request, user_id):
+    follow = CustomUser.objects.get(id=user_id)
+    user = request.user
+    if follow != user and follow not in user.following.all():
+        user.following.add(follow)
+    else:
+        user.following.remove(follow)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+@login_required
+def direct_message_view(request):
+    '''
+    grabs all direct messages written by and targeting the current user
+    loops through them and checks if the message is in the feed list already
+    if feed is empty appends the most recent message and moves onto the next dm
+    if feed is not empty it loops through feed and if any of feed items have a
+    user equal to the current dm author or target(loop ran based on if author is user or not)
+    if that is true it marks in_feed as true meaning the message will not be added to
+    the feed
+    '''
+    DMS = DirectMessage.objects.filter(target=request.user)
+    DMS = DMS.union(DirectMessage.objects.filter(author=request.user)).order_by('-id')
+    feed=[]
+    for dm in DMS:
+        in_feed = False
+        if dm.author == request.user:
+            if len(feed) > 0:
+                for item in feed:
+                    if item['user'] == dm.target:
+                        in_feed = True
+            if not in_feed:
+                feed.append({'user':dm.target, 'message': dm.message})
+        else:
+            if len(feed) > 0:
+                for item in feed:
+                    if item['user'] == dm.author:
+                        in_feed = True
+            if not in_feed:
+                feed.append({'user':dm.author, 'message': dm.message})
+
+    return render(request, 'dm_view.html', {'dms': feed})
+
+
+@login_required
+def message_feed_view(request, author_id):
+    if request.user.id == author_id:
+        raise SuspiciousOperation("You can't talk to yourself")
+    target = CustomUser.objects.get(id=author_id)
+    DMS = DirectMessage.objects.filter(target=request.user).filter(author=author_id)
+    for dm in DMS:
+        dm.message.seen = True
+        dm.message.save()
+    DMS2 = DirectMessage.objects.filter(target=author_id).filter(author=request.user)
+    DMS = DMS.union(DMS2)
+    if request.method == 'POST':
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            DM = Message.objects.create(text=data['text'])
+            DirectMessage.objects.create(target=target, message=DM, author= request.user)
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+    form = MessageForm()
+    return render(request, 'messagefeed.html', {'dms': DMS, 'form': form, 'target': target})
+
+
+@login_required
+def handle_like(request, post_id):
+    like = Post.objects.get(id=post_id)
+    user = request.user
+    if like not in user.liked_posts.all():
+        user.liked_posts.add(like)
+        like.likes += 1
+        like.save()
+    else:
+        user.liked_posts.remove(like)
+        like.likes -= 1
+        like.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def my_400(request, exception):
+    return render(request, '400.html', {'exception': exception})
+
+
+def my_404(request, exception):
+    return render(request, '404.html', {'message': exception})
+
+
+def my_500(request):
+    return render(request, '500.html')

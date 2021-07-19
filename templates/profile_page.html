@@ -1,17 +1,63 @@
 {% load static %}
-<button><a href='/'>Home</a></button>
-<button><a href='/login/'>Log In</a></button>
-<button><a href='/signup/'>Sign Up</a></button>
-<button><a href='/logout/'>Log Out</a></button>
-<button><a href='/create_post/'>Create Post</a></button>
-<button><a href='/profile/{{request.user.id}}/'>View Profile</a></button>
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+{% include 'nav.html' %}
 
 
-<h1>Welcome {{request.user}}</h1>
+<h1>{{my_user|title}}'s Profile</h1>
+<div class="profilespace">
+    {% if my_user.image %}
+        <img class='profileimg' src='{{my_user.image.url}}' alt="avatar">
+    {% endif %}
+        <div class="userinfo">
+            <h2>Name: {{my_user.name}}</h2>
+            <h2>Bio: {{my_user.bio}}</h2>
+            {% if request.user != my_user %}
+                <a href="/messagefeed/{{my_user.id}}"><button type="button" class="btn btn-info">Message Me</button></a>
+                <a href="/follow/{{my_user.id}}">
+                    {%if my_user in request.user.following.all%}
+                        <button type="button" class="btn btn-warning">UnFollow &#128148</button>
+                    {% elif request.user.is_authenticated %}
+                        <button type="button" class="btn btn-info">Follow &#128151</button>
+                    {%endif%}
+                </a>
+            {% endif %}
+        </div>
+</div>
 
-<ul>
+
+<h2>Bens Posts:</h2>
+<div class="profilefeed">
     {% for post in posts %}
-        <li>{{post.title}}</li>
-        <li>{{post.body}}</li>
+        <table class="post">
+            <thead>
+                <th>
+                    {{post.title}}
+                </th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        {% if post.image %}
+                            <img class="postimg" src="{{post.image.url}}" alt="{{post.title}}">
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr><td>{{post.body}}</td></tr>
+                <tr>
+                    <td>
+                        Likes:{{post.likes}} <a href="/like/{{post.id}}">
+                            {% if post in request.user.liked_posts.all %}
+                                <button type="button" class="btn btn-warning">UnLike</button>
+                            {% else %}
+                                <button type="button" class="btn btn-info">Like</button>
+                            {% endif %}
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     {% endfor %}
-</ul>
+</div>

@@ -1,11 +1,66 @@
 {% load static %}
-<button><a href='/'>Home</a></button>
-<button><a href='/login/'>Log In</a></button>
-<button><a href='/signup/'>Sign Up</a></button>
-<button><a href='/logout/'>Log Out</a></button>
-<button><a href='/create_post/'>Create Post</a></button>
-<button><a href='/profile/{{request.user.id}}/'>View Profile</a></button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+
+{% include 'nav.html' %}
 
 <h1>Main Page</h1>
+<div class="mainpage">
+    <div class="user">
+        <h3>{{ request.user }}</h3>
+        {% if request.user.image %}
+            <img class="profilepic" src="{{request.user.image.url}}" alt="profilepic">
+        {% endif %}
+    </div>
+    <div class="posts">
+        <a href="/"><button type="button" class="btn btn-info">All Posts</button></a>
+        <a href="/following/"><button type="button" class="btn btn-info">People you Follow</button></a>
+        <div class="postfeed">
+            {% for post in posts %}
+                <table class='post'>
+                    <thead>
+                        <th>
+                            <a href="/profile/{{post.user_name.id}}">
+                                {% if post.user_name.image %}
+                                {{post.user_name|title}}
+                                    <img class='avatar' src='{{post.user_name.image.url}}' alt="avatar">
+                                {% endif %}
+                            </a>
+                            :{{post.title}}
+                        </th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                {% if post.image %}
+                                    <img class="postimg" src="{{post.image.url}}" alt="{{post.title}}">
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr><td>{{post.body}}</td></tr>
+                        <tr>
+                            <td>
+                                Likes:{{post.likes}} <a href="/like/{{post.id}}">
+                                    {% if post in request.user.liked_posts.all %}
+                                        <button type="button" class="btn btn-warning">UnLike</button>
+                                    {% else %}
+                                        <button type="button" class="btn btn-info">Like</button>
+                                    {% endif %}
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            {% endfor %}
+        </div>
+    </div>
+</div>
 
-<h3>{{ request.user }}</h3>
+    
+</body>
+</html>

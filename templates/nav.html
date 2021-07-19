@@ -1,0 +1,18 @@
+<div class="nav">
+    <h1>BlinkedIn</h1>
+    <div class="buttonspace">
+            {% if request.user.is_authenticated %}
+            <a href='/'><button type="button" class="btn btn-outline-info">Home</button></a>
+            <a href='/create_post/'><button type="button" class="btn btn-outline-info">Create Post</button></a>
+            <a href='/messages/'><button type="button" class="btn btn-outline-info">Messages</button></a>
+            <a href='/profile/{{request.user.id}}/'><button type="button" class="btn btn-outline-info">View Profile</button></a>
+            <a href='/logout/'><button type="button" class="btn btn-outline-danger">Log Out</button></a>
+            {% else %}
+                <a href='/login/'><buttontype="button" class="btn btn-outline-info">Log In</buttontype=></a>
+                <a href='/signup/'><buttontype="button" class="btn btn-outline-info">Sign Up</buttontype=></a>
+            {% endif %}
+        </div>
+</div>
+{% if request.user.is_authenticated %}
+    <h5>{{request.user.check_messages}}</h5>
+{% endif %}

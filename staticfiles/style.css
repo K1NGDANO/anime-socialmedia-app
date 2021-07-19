@@ -1,0 +1,173 @@
+.post{
+    background: rgba(255, 248, 220, 0.747);
+    margin-bottom: 1em;
+}
+
+.conversations table{
+    background: rgba(255, 248, 220, 0.747);
+    margin-bottom: 1em;
+}
+
+.messagefeed{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.messages{
+    background: rgb(253, 250, 236);
+    margin-top: 2em;
+    width: 50%;
+    height: 20em;
+    overflow: auto;
+    display: flex;
+    flex-direction: column-reverse;
+    border: 1px solid grey;
+}
+
+
+.feedform form{
+    display: flex;
+    width: 100%;
+    margin: 0%;
+}
+
+.feedform form input{ 
+    width: 40em;
+    padding: 1em;
+    line-height: 28px;
+}
+
+.feedform form p label{ 
+    font-size: 0;
+}
+
+.feedform form button{ 
+    width: 10em;
+    margin: 1em 0;
+}
+
+body::after{
+    content: '';
+    background-image: url('https://i.pinimg.com/originals/b5/5b/0a/b55b0a86983d46d4dde3a5e1dd4f2a62.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    opacity: 0.5;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: fixed;
+    z-index: -1;  
+}
+
+
+thead{
+    display: flex;
+}
+
+.avatar{
+    height: 2em;
+}
+
+.mainpage{
+    display: flex;
+}
+
+.profilepic{
+    width: 100%;
+}
+
+.user{
+    width: 25%;
+    margin: 2em;
+}
+
+.posts{
+    width: 75%;
+}
+
+.postfeed{
+    /* overflow: auto;
+    height: 35em; */
+    width: 60%;
+    padding: 1em;
+}
+.postfeed table{
+    width: 100%;
+}
+
+.postimg{
+    width: 100%;
+}
+
+.dmfeed{
+    border: 1px solid black;
+    width: 50%;
+    border-collapse: collapse;
+}
+
+th{
+    text-align: left;
+}
+
+.dmfeed tr{
+    border-top: 1px solid black;
+}
+.dmfeed td{
+    border-left: 1px solid black;
+}
+
+.newmessage{
+    font-size: larger;
+    font-weight: bold;
+    color: green;
+}
+
+.errorpage{
+    color:red;
+}
+
+h1{
+    color: red;
+}
+
+.nav{
+    display: flex;
+    flex-direction: column;
+    background-image: url('./navbanner/dbzbanner1.jpg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-color: linear-gradient(to right bottom,lightcyan, dodgerblue);
+    color: darkgray;
+    margin: 0;
+    padding: 15px;
+    width: 100%;
+    box-shadow: 3px 3px 15px grey;
+    position: sticky;
+    top: 0;
+}
+
+.btn-outline-info{
+    color: white;
+}
+
+.profilespace{
+    display: flex;
+}
+
+.profileimg{
+    width: 20em;
+    margin: 2px;
+}
+
+.profilefeed{
+    width: 40%;
+    padding: 1em;
+}
+.profilefeed table{
+    width: 100%;
+}
